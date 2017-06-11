@@ -52,9 +52,9 @@ def hide(filename, message):
             else:
                 newData.append(item)
         img.putdata(newData)
-        img.save(filename, "PNG")
-        return "[+] Completed!"
-    return "[-] Incorrect Image mode, coudn't hide"
+        img.save("Compiled "+filename, "PNG")
+        return "[+] Selesai!"
+    return "[-] Tipe gambar tidak sesuai dengan biasanya. Gagal menyembunyikan pesan rahasia"
 
 def retr(filename):
     img = Image.open(filename)
@@ -71,10 +71,10 @@ def retr(filename):
             else:
                 binary = binary + digit
                 if (binary[-16:] == '1111111111111110'):
-                    print "[+] Success!"
+                    print "[+] Selesai!"
                     return bin2str(binary[:-16])
         return bin2str(binary)
-    return "[-] Incorrect Image mode, couldn't retrieve the message!"
+    return "[-] Tipe gambar tidak sesuai dengan biasanya. Gagal mengambil pesan rahasia"
 
 def Main():
     parser = optparse.OptionParser('usage %prog'+\
