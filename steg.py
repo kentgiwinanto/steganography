@@ -2,20 +2,25 @@ from PIL import Image
 import binascii
 import optparse
 
+# mengubah kode RGB menjadi hexcode
 def rgb2hex(r,g,b):
     return '#{:02x}{:02x}{:02x}'.format(r,g,b)
 
+# Mengubah hexcode menjadi kode RGB
 def hex2rgb(hexcode):
     return tuple(map(ord, hexcode[1:].decode('hex')))
 
+# Mengubah String menjadi Binary
 def str2bin(message):
     binary = bin(int(binascii.hexlify(message), 16))
     return binary[2:]
 
+# Mengubah Binary menjadi String
 def bin2str(binary):
     message = binascii.unhexlify('%x' % (int('0b' + binary,2)))
     return message
 
+# Melakukan encoding hexcode di posisi yang telah di tentukan oleh tuple
 def encode(hexcode, digit):
     if hexcode[-1] in ('0','1','2','3','4','5'):
         hexcode = hexcode[:-1]+digit
@@ -23,15 +28,17 @@ def encode(hexcode, digit):
     else:
         return None
 
+# Melakukan decoding hexcode
 def decode(hexcode):
     if hexcode[-1] in ('0','1'):
         return hexcode[-1]
     else:
         return None
 
+# Melakukan penyembunyian message text ke gambar
 def hide(filename, message):
-    img = Image.open(filename)
-    binary = str2bin(message) +  '1111111111111110'
+    img = Image.open(filename) # Membuka gambar dahulu
+    binary = str2bin(message) +  '1111111111111110' #Mengubah text string menjadi binary dan dikasih penanda di belakangnya bahwa gambar ini disembunyikan dengan menggunakan aplikasi ini
     if img.mode in ('RGBA'):
         img = img.convert('RGBA')
         datas = img.getdata()
@@ -52,7 +59,7 @@ def hide(filename, message):
             else:
                 newData.append(item)
         img.putdata(newData)
-        img.save("Compiled "+filename, "PNG")
+        img.save("Compiled "+filename, "PNG") #jika sudah selesai, maka file tersebut akan dicreate dengan tambahan kata compile di depan filenamenya
         return "[+] Selesai!"
     return "[-] Tipe gambar tidak sesuai dengan biasanya. Gagal menyembunyikan pesan rahasia"
 
@@ -70,7 +77,7 @@ def retr(filename):
                 pass
             else:
                 binary = binary + digit
-                if (binary[-16:] == '1111111111111110'):
+                if (binary[-16:] == '1111111111111110'): #Mencari posisi penanda yang telah kita tempatkan tadi
                     print "[+] Selesai!"
                     return bin2str(binary[:-16])
         return bin2str(binary)
